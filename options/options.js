@@ -67,6 +67,9 @@ function renderList() {
       currentProxies = currentProxies.filter(d => d !== domain);
       if (currentActive === domain) {
         currentActive = currentProxies[0] || 'gh-proxy.com';
+        if (!currentProxies.includes(currentActive)) {
+          currentProxies.push(currentActive);
+        }
       }
       await chrome.storage.sync.set({ proxyList: currentProxies, proxyDomain: currentActive });
       showToast(`已删除 ${domain}`);

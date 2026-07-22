@@ -6,7 +6,9 @@
   "permissions": [
     "declarativeNetRequest",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "scripting",
+    "activeTab"
   ],
   "host_permissions": [
     "*://github.com/*",

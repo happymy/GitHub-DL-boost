@@ -1,7 +1,6 @@
 const STORAGE_KEYS = {
   proxyDomain: 'proxyDomain',
   enabled: 'enabled',
-  proxyList: 'proxyList',
 };
 
 const DEFAULT_PROXY = 'gh-proxy.com';
@@ -15,14 +14,14 @@ const PRESET_PROXIES = [
 ];
 
 const RULE_TEMPLATES = [
-  { id: 1,  pattern: '^https://raw\\.githubusercontent\\.com/(.*)',           sub: '/https://raw.githubusercontent.com/$1' },
-  { id: 2,  pattern: '^https://github\\.com/(.*)/releases/download/(.*)',      sub: '/https://github.com/$1/releases/download/$2' },
-  { id: 3,  pattern: '^https://github\\.com/(.*)/archive/(.*)',               sub: '/https://github.com/$1/archive/$2' },
-  { id: 4,  pattern: '^https://gist\\.githubusercontent\\.com/(.*)',           sub: '/https://gist.githubusercontent.com/$1' },
-  { id: 5,  pattern: '^https://github\\.com/(.*)/releases/expanded_assets/(.*)', sub: '/https://github.com/$1/releases/expanded_assets/$2' },
-  { id: 6,  pattern: '^https://github\\.com/(.*)/releases/tag/(.*)',           sub: '/https://github.com/$1/releases/tag/$2' },
-  { id: 7,  pattern: '^https://avatars\\.githubusercontent\\.com/(.*)',         sub: '/https://avatars.githubusercontent.com/$1' },
-  { id: 8,  pattern: '^https://api\\.github\\.com/(.*)',                       sub: '/https://api.github.com/$1' },
+  { id: 1,  pattern: '^https://raw\\.githubusercontent\\.com/(.*)',           sub: '/https://raw.githubusercontent.com/\\1' },
+  { id: 2,  pattern: '^https://github\\.com/(.*)/releases/download/(.*)',      sub: '/https://github.com/\\1/releases/download/\\2' },
+  { id: 3,  pattern: '^https://github\\.com/(.*)/archive/(.*)',               sub: '/https://github.com/\\1/archive/\\2' },
+  { id: 4,  pattern: '^https://gist\\.githubusercontent\\.com/(.*)',           sub: '/https://gist.githubusercontent.com/\\1' },
+  { id: 5,  pattern: '^https://github\\.com/(.*)/releases/expanded_assets/(.*)', sub: '/https://github.com/\\1/releases/expanded_assets/\\2' },
+  { id: 6,  pattern: '^https://github\\.com/(.*)/releases/tag/(.*)',           sub: '/https://github.com/\\1/releases/tag/\\2' },
+  { id: 7,  pattern: '^https://avatars\\.githubusercontent\\.com/(.*)',         sub: '/https://avatars.githubusercontent.com/\\1' },
+  { id: 8,  pattern: '^https://api\\.github\\.com/(.*)',                       sub: '/https://api.github.com/\\1' },
 ];
 
 async function buildRules(proxyDomain) {
@@ -70,12 +69,16 @@ async function syncState() {
   }
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+async function initState() {
   const { proxyList } = await chrome.storage.sync.get({ proxyList: [] });
   if (!proxyList || proxyList.length === 0) {
     await chrome.storage.sync.set({ proxyList: PRESET_PROXIES });
   }
   await syncState();
+}
+
+chrome.runtime.onInstalled.addListener(async () => {
+  await initState().catch(console.error);
 
   chrome.contextMenus.create({
     id: 'copy-accelerated-link',
@@ -101,11 +104,11 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
-chrome.runtime.onStartup.addListener(syncState);
+chrome.runtime.onStartup.addListener(() => syncState().catch(console.error));
 
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.proxyDomain || changes.enabled) {
-    syncState();
+    syncState().catch(console.error);
   }
 });
 
@@ -122,6 +125,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     try {
       await navigator.clipboard.writeText(accelerated);
     } catch {
+      if (!tab) return;
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: (text) => navigator.clipboard.writeText(text),
