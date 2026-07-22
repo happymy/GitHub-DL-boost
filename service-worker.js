@@ -30,7 +30,7 @@ async function buildRules(proxyDomain) {
     },
     condition: {
       regexFilter: t.pattern,
-      resourceTypes: ['main_frame', 'sub_frame', 'xmlhttprequest']
+      resourceTypes: ['main_frame', 'sub_frame', 'stylesheet', 'script', 'xmlhttprequest', 'image', 'font', 'media', 'websocket', 'other']
     }
   }));
 }
