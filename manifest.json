@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub-DL-boost",
+  "version": "1.0.0",
+  "description": "自动将 GitHub 下载链接重定向到加速代理站，提升国内下载速度。支持自定义加速源。",
+  "permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "*://github.com/*",
+    "*://raw.githubusercontent.com/*",
+    "*://gist.github.com/*",
+    "*://gist.githubusercontent.com/*",
+    "*://api.github.com/*",
+    "*://avatars.githubusercontent.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "GitHub-DL-boost",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

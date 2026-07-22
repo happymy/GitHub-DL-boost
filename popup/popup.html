@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>GitHub-DL-boost</h1>
+      <label class="switch">
+        <input type="checkbox" id="toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="status">
+      <span class="label">当前代理源</span>
+      <span class="value" id="currentProxy">-</span>
+    </div>
+
+    <div class="status" id="enabledStatus">
+      <span class="label">状态</span>
+      <span class="value" id="statusText">-</span>
+    </div>
+
+    <button id="openOptions" class="btn">代理源设置</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
