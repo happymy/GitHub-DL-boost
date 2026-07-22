@@ -14,14 +14,10 @@ const PRESET_PROXIES = [
 ];
 
 const RULE_TEMPLATES = [
-  { id: 1,  pattern: '^https://raw\\.githubusercontent\\.com/(.*)',           sub: '/https://raw.githubusercontent.com/\\1' },
-  { id: 2,  pattern: '^https://github\\.com/(.*)/releases/download/(.*)',      sub: '/https://github.com/\\1/releases/download/\\2' },
-  { id: 3,  pattern: '^https://github\\.com/(.*)/archive/(.*)',               sub: '/https://github.com/\\1/archive/\\2' },
-  { id: 4,  pattern: '^https://gist\\.githubusercontent\\.com/(.*)',           sub: '/https://gist.githubusercontent.com/\\1' },
-  { id: 5,  pattern: '^https://github\\.com/(.*)/releases/expanded_assets/(.*)', sub: '/https://github.com/\\1/releases/expanded_assets/\\2' },
-  { id: 6,  pattern: '^https://github\\.com/(.*)/releases/tag/(.*)',           sub: '/https://github.com/\\1/releases/tag/\\2' },
-  { id: 7,  pattern: '^https://avatars\\.githubusercontent\\.com/(.*)',         sub: '/https://avatars.githubusercontent.com/\\1' },
-  { id: 8,  pattern: '^https://api\\.github\\.com/(.*)',                       sub: '/https://api.github.com/\\1' },
+  { id: 1, pattern: '^https://raw\\.githubusercontent\\.com/(.*)',         sub: '/https://raw.githubusercontent.com/\\1' },
+  { id: 2, pattern: '^https://github\\.com/(.*)/releases/download/(.*)',    sub: '/https://github.com/\\1/releases/download/\\2' },
+  { id: 3, pattern: '^https://github\\.com/(.*)/archive/(.*)',             sub: '/https://github.com/\\1/archive/\\2' },
+  { id: 4, pattern: '^https://gist\\.githubusercontent\\.com/(.*)',         sub: '/https://gist.githubusercontent.com/\\1' },
 ];
 
 async function buildRules(proxyDomain) {
@@ -34,7 +30,7 @@ async function buildRules(proxyDomain) {
     },
     condition: {
       regexFilter: t.pattern,
-      resourceTypes: ['main_frame', 'sub_frame', 'stylesheet', 'script', 'xmlhttprequest', 'image', 'font', 'media', 'websocket', 'other']
+      resourceTypes: ['main_frame', 'sub_frame', 'xmlhttprequest']
     }
   }));
 }
@@ -87,7 +83,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     targetUrlPatterns: [
       '*://github.com/*',
       '*://raw.githubusercontent.com/*',
-      '*://gist.github.com/*',
       '*://gist.githubusercontent.com/*',
     ],
   });
@@ -98,7 +93,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     targetUrlPatterns: [
       '*://github.com/*',
       '*://raw.githubusercontent.com/*',
-      '*://gist.github.com/*',
       '*://gist.githubusercontent.com/*',
     ],
   });
@@ -130,7 +124,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         target: { tabId: tab.id },
         func: (text) => navigator.clipboard.writeText(text),
         args: [accelerated],
-      });
+      }).catch(() => {});
     }
   }
 

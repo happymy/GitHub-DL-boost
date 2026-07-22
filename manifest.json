@@ -13,10 +13,7 @@
   "host_permissions": [
     "*://github.com/*",
     "*://raw.githubusercontent.com/*",
-    "*://gist.github.com/*",
-    "*://gist.githubusercontent.com/*",
-    "*://api.github.com/*",
-    "*://avatars.githubusercontent.com/*"
+    "*://gist.githubusercontent.com/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",
