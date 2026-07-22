@@ -1,1 +1,1 @@
-{"scripts":{"test":"vitest run"},"devDependencies":{"vitest":"^4.1.10"}}
+{"type":"module","scripts":{"test":"vitest run","gen-icons":"node scripts/gen-icons.js"},"devDependencies":{"sharp":"^0.35.3","vitest":"^4.1.10"}}
