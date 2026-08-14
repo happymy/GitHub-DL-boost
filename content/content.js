@@ -8,8 +8,6 @@
   const patterns = [
     /^https:\/\/github\.com\/.*\/releases\/download\//,
     /^https:\/\/github\.com\/.*\/archive\//,
-    /^https:\/\/raw\.githubusercontent\.com\//,
-    /^https:\/\/gist\.githubusercontent\.com\//,
   ];
 
   function shouldRewrite(url) {

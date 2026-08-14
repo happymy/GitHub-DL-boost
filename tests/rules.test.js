@@ -17,7 +17,7 @@ function buildRules(proxyDomain) {
     },
     condition: {
       regexFilter: t.pattern,
-      resourceTypes: ['main_frame', 'sub_frame', 'stylesheet', 'script', 'xmlhttprequest', 'image', 'font', 'media', 'websocket', 'other']
+      resourceTypes: ['main_frame']
     }
   }));
 }
@@ -26,6 +26,13 @@ describe('DNR rule building', () => {
   it('builds 4 rules', () => {
     const rules = buildRules('gh-proxy.com');
     expect(rules).toHaveLength(4);
+  });
+
+  it('only intercepts main_frame navigation, not page resources', () => {
+    const rules = buildRules('gh-proxy.com');
+    for (const rule of rules) {
+      expect(rule.condition.resourceTypes).toEqual(['main_frame']);
+    }
   });
 
   it('generates correct regexSubstitution for raw', () => {

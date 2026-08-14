@@ -3,8 +3,6 @@ import { describe, it, expect } from 'vitest';
 const patterns = [
   /^https:\/\/github\.com\/.*\/releases\/download\//,
   /^https:\/\/github\.com\/.*\/archive\//,
-  /^https:\/\/raw\.githubusercontent\.com\//,
-  /^https:\/\/gist\.githubusercontent\.com\//,
 ];
 
 function shouldRewrite(url) {
@@ -21,12 +19,13 @@ describe('content script URL matching', () => {
     expect(shouldRewrite('https://github.com/user/repo/archive/v1.0.tar.gz')).toBe(true);
   });
 
-  it('matches raw.githubusercontent.com', () => {
-    expect(shouldRewrite('https://raw.githubusercontent.com/user/repo/main/file.js')).toBe(true);
+  it('rejects raw.githubusercontent.com links (README images, page content)', () => {
+    expect(shouldRewrite('https://raw.githubusercontent.com/user/repo/main/logo.png')).toBe(false);
+    expect(shouldRewrite('https://raw.githubusercontent.com/user/repo/main/file.js')).toBe(false);
   });
 
-  it('matches gist.githubusercontent.com', () => {
-    expect(shouldRewrite('https://gist.githubusercontent.com/user/abc123/raw/file.js')).toBe(true);
+  it('rejects gist.githubusercontent.com links (page content)', () => {
+    expect(shouldRewrite('https://gist.githubusercontent.com/user/abc123/raw/file.js')).toBe(false);
   });
 
   it('rejects GitHub homepage', () => {
@@ -51,9 +50,5 @@ describe('content script URL matching', () => {
 
   it('rejects gist.github.com (not gist.githubusercontent.com)', () => {
     expect(shouldRewrite('https://gist.github.com/user/abc123')).toBe(false);
-  });
-
-  it('handles relative URLs resolved to absolute via a.href', () => {
-    expect(shouldRewrite('https://github.com/user/repo/archive/refs/heads/main.zip')).toBe(true);
   });
 });
